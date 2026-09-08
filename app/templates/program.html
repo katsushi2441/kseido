@@ -30,7 +30,7 @@
 <section class="list">
   <h2>あわせて見る制度</h2>
   <div class="cards">
-    {% for r in related %}<article class="card pc"><span class="kind lv-{{ r.level }}">{{ r.level }}</span> <span class="due {{ r.state.type }}">{{ r.state.label }}</span><h3><a href="{{ root }}p/{{ r.id }}{% if ward %}?ward={{ ward }}{% endif %}">{{ r.name }}</a></h3><p class="pbenefit">{{ r.benefit }}</p></article>{% endfor %}
+    {% for r in related %}<article class="card prog"><span class="kind lv-{{ r.level }}">{{ r.level }}</span> <span class="due {{ r.state.type }}">{{ r.state.label }}</span><h3><a href="{{ root }}p/{{ r.id }}{% if ward %}?ward={{ ward }}{% endif %}">{{ r.name }}</a></h3><p class="pbenefit">{{ r.benefit }}</p></article>{% endfor %}
   </div>
 </section>
 {% endif %}

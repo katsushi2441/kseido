@@ -142,7 +142,7 @@ table.grid td.na{color:#c2cad0}
 .tile:hover{border-color:var(--teal);box-shadow:0 4px 18px rgba(10,154,143,.15)}
 .tile-ic{font-size:26px;line-height:1}.tile-n{font-weight:700;font-size:15px}.tile-d{font-size:12px;color:var(--sub);line-height:1.45}.tile-c{margin-top:auto;font-size:12px;color:var(--teal-d);font-weight:700}
 .soon{margin:18px 0 28px}.soon h2{font-size:18px}
-.pc .pc-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+.prog .pc-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
 .kind.lv-国{background:#eef2fb;color:#2b4a9a;border-color:#cdd8f2}.kind.lv-県{background:#f3eefb;color:#5b3f9a;border-color:#dccff2}.kind.lv-市{background:var(--teal-bg);color:var(--teal-d);border-color:#bfe3de}
 .due{display:inline-block;font-size:12px;border-radius:6px;padding:2px 8px;background:var(--soft);color:var(--sub);border:1px solid var(--line)}
 .due.期限{background:var(--amber-bg);color:var(--amber);border-color:#eddaa5}.due.hot{background:var(--red-bg);color:var(--red);border-color:#efcaca;font-weight:700}

@@ -29,7 +29,7 @@
   <h2>期限が近い制度 <span class="cnt">90日以内</span></h2>
   <div class="cards">
     {% for p in soon %}
-    <article class="card pc">
+    <article class="card prog">
       <span class="kind">{{ p.level }}</span> <span class="due {{ 'hot' if p.state.days <= 30 else '' }}">{{ p.state.date }}まで（あと{{ p.state.days }}日）</span>
       <h3><a href="{{ root }}p/{{ p.id }}">{{ p.name }}</a></h3>
       <p class="pbenefit">{{ p.benefit }}</p>

@@ -32,7 +32,7 @@
 {% if not items %}<div class="empty card"><p class="empty-t">この条件に合う制度はありません。</p><p>属性のチェックを外すか、別の困りごとを選んでください。</p></div>{% endif %}
 <div class="cards">
 {% for p in items %}
-  <article class="card pc">
+  <article class="card prog">
     <div class="pc-top"><span class="kind lv-{{ p.level }}">{{ p.level }}</span> <span class="due {{ p.state.type }}{% if p.state.days is not none and p.state.days <= 30 %} hot{% endif %}">{{ p.state.label }}{% if p.state.date %}・{{ p.state.date }}まで{% endif %}</span></div>
     <h3><a href="{{ root }}p/{{ p.id }}{% if ward %}?ward={{ ward }}{% endif %}">{{ p.name }}</a></h3>
     <p class="pbenefit">{{ p.benefit }}</p>

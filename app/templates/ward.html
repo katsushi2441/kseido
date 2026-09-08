@@ -16,7 +16,7 @@
   <h2>制度 <span class="cnt">{{ items | length }}件</span></h2>
   <div class="cards">
   {% for p in items %}
-    <article class="card pc"><span class="kind lv-{{ p.level }}">{{ p.level }}</span> <span class="due {{ p.state.type }}">{{ p.state.label }}{% if p.state.date %}・{{ p.state.date }}まで{% endif %}</span>
+    <article class="card prog"><span class="kind lv-{{ p.level }}">{{ p.level }}</span> <span class="due {{ p.state.type }}">{{ p.state.label }}{% if p.state.date %}・{{ p.state.date }}まで{% endif %}</span>
       <h3><a href="{{ root }}p/{{ p.id }}?ward={{ w.slug }}">{{ p.name }}</a></h3><p class="pbenefit">{{ p.benefit }}</p>
       <div class="kv"><div class="k">窓口</div><div>{{ p.apply_resolved.window }}{% if p.apply_resolved.tel %} ・ <a href="tel:{{ p.apply_resolved.tel }}">{{ p.apply_resolved.tel }}</a>{% endif %}</div></div>
     </article>
