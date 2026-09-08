@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ site_name }}{% endblock %}</title>
+<meta name="description" content="{% block description %}困りごとから、使える{{ region }}・区・県・国の制度を引き、申請先・電話・期限・必要書類と出典リンクを出します。議員事務所・相談窓口向け。{% endblock %}">
+<link rel="canonical" href="{{ public_base }}{{ path }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site_name }}">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:url" content="{{ public_base }}{{ path }}">
+<meta property="og:image" content="{{ public_base }}static/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+{% if path == 'records' %}<meta name="robots" content="noindex">{% endif %}
+<link rel="icon" href="{{ root }}static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="{{ root }}static/style.css?v={{ version }}">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BP0650KDFR"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BP0650KDFR');</script>
+{% block head %}{% endblock %}
+</head>
+<body>
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <a class="brand" href="{{ root if root else './' }}"><span class="brand-mark">K</span><span class="brand-name">{{ site_name }}</span><span class="brand-sub">{{ region }} デモ版</span></a>
+    <nav class="nav">
+      <a href="{{ root }}about">仕組みと出典</a>
+      <a href="{{ root }}records">相談記録</a>
+      <a href="https://kurage.exbridge.jp/kecnavi.php/" target="_blank" rel="noopener">通報先ナビ</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+{% block body %}{% endblock %}
+</main>
+<footer class="ftr">
+  <div class="wrap">
+    <p class="ftr-note">要件・金額・期限は変わります。各制度の「出典」（公式ページ）で確認し、申請先に電話してから動いてください。名古屋市サイトの本文は転載せず、窓口・電話・期限・書類という事実とリンクだけを載せています（データ時点 {{ asof }}）。</p>
+    <p class="ftr-links"><a href="{{ root }}about">仕組みと出典</a> ・ <a href="{{ root }}llms.txt">llms.txt</a> ・ <a href="{{ root }}api/programs">API</a> ・ <a href="https://kurage.exbridge.jp/" target="_blank" rel="noopener">Kurage</a> ・ <a href="https://exbridge.jp/" target="_blank" rel="noopener">株式会社エクスブリッジ</a></p>
+  </div>
+</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

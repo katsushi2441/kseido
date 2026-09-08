@@ -1,0 +1,14 @@
+[Unit]
+Description=Kurage seido navi (kseido) :18385
+After=network-online.target
+
+[Service]
+WorkingDirectory=/home/kojima/work/kseido
+EnvironmentFile=-/home/kojima/work/kseido/.env
+Environment=KSEIDO_PUBLIC_BASE=https://kurage.exbridge.jp/kseido.php/
+ExecStart=/home/kojima/work/kseido/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 18385 --proxy-headers --forwarded-allow-ips=*
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

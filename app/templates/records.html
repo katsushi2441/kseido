@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}相談記録 | {{ site_name }}{% endblock %}
+{% block body %}
+<nav class="bc"><a href="{{ root if root else './' }}">困りごと</a> › 相談記録</nav>
+<section class="hero small"><span class="badge">事務所用・トークンを知る人だけ</span><h1>相談記録 <span class="cnt">{{ rows | length }}件</span></h1><p class="lead">誰の（イニシャル等）・どの区・どの困りごと・案内した制度・次にやること。氏名や住所は書かない運用を想定しています。<a href="{{ root }}records.csv">CSVで書き出す</a></p></section>
+
+<form class="card recform" method="post" action="{{ root }}records">
+  <h2>記録を追加</h2>
+  <div class="fgrid">
+    <div class="fcol"><div class="flabel">担当</div><input class="sel" name="staff" placeholder="担当者"></div>
+    <div class="fcol"><div class="flabel">相談者（イニシャル等）</div><input class="sel" name="resident" placeholder="例: T.K.（40代・女性）"></div>
+    <div class="fcol"><div class="flabel">区</div><select class="sel" name="ward"><option value="">—</option>{% for w in wards %}<option value="{{ w.name }}">{{ w.name }}</option>{% endfor %}</select></div>
+    <div class="fcol"><div class="flabel">困りごと</div><select class="sel" name="situation"><option value="">—</option>{% for s in situations %}<option value="{{ s.name }}">{{ s.name }}</option>{% endfor %}</select></div>
+    <div class="fcol"><div class="flabel">状況メモ</div><textarea class="sel" name="memo" rows="3" placeholder="世帯・収入・期限など（個人が特定される情報は書かない）"></textarea></div>
+    <div class="fcol"><div class="flabel">案内した制度（複数可）</div><select class="sel" name="programs" multiple size="6">{% for p in programs %}<option value="{{ p.id }}">{{ p.name }}（{{ p.level }}）</option>{% endfor %}</select></div>
+    <div class="fcol"><div class="flabel">状態</div><select class="sel" name="status"><option>対応中</option><option>案内済み</option><option>申請済み</option><option>完了</option></select></div>
+    <div class="fcol"><div class="flabel">次にやること／期日</div><input class="sel" name="next_action" placeholder="例: 所得証明を取って再来所"><input class="sel" type="date" name="next_date"></div>
+  </div>
+  <div class="factions"><button class="btn btn-primary" type="submit">保存</button></div>
+</form>
+
+<section class="list">
+  <div class="tscroll">
+  <table class="tbl">
+    <thead><tr><th>#</th><th>日時</th><th>担当</th><th>相談者</th><th>区</th><th>困りごと</th><th>案内した制度</th><th>状態</th><th>次にやること</th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+      <tr><td>{{ r.id }}</td><td>{{ r.created_at | replace('T',' ') }}</td><td>{{ r.staff }}</td><td>{{ r.resident }}</td><td>{{ r.ward }}</td><td>{{ r.situation }}</td><td>{% for p in r.programs_list %}<a href="{{ root }}p/{{ p.id }}">{{ p.name }}</a>{% if not loop.last %}、{% endif %}{% endfor %}</td><td>{{ r.status }}</td><td>{{ r.next_action }}{% if r.next_date %}（{{ r.next_date }}）{% endif %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+{% endblock %}

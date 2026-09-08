@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}相談記録（事務所用） | {{ site_name }}{% endblock %}
+{% block body %}
+<nav class="bc"><a href="{{ root if root else './' }}">困りごと</a> › 相談記録</nav>
+<section class="hero small"><span class="badge">事務所用</span><h1>相談記録</h1>
+<p class="lead">受けた相談と案内した制度、次にやることを残す台帳です。{% if enabled %}担当者に配られたトークンを入れてください。{% else %}このデモではトークンが設定されていないため、記録機能は無効です。導入時は環境変数 KSEIDO_ADMIN_TOKEN を設定します。{% endif %}</p></section>
+{% if enabled %}
+<form class="card recform" method="get" action="{{ root }}records"><div class="fgrid"><div class="fcol"><div class="flabel">トークン</div><input class="sel" type="password" name="token" autocomplete="off"></div></div><div class="factions"><button class="btn btn-primary" type="submit">開く</button></div></form>
+{% endif %}
+<section class="compare"><div class="cmpgrid">
+  <div class="cmp yes"><h3>残るもの</h3><p>日時・担当・相談者（イニシャル等）・区・困りごと・状況メモ・案内した制度・状態・次にやること／期日。CSVで書き出せます。</p></div>
+  <div class="cmp no"><h3>残さないもの</h3><p>氏名・住所・電話などの個人情報。台帳は事務所のサーバーの中だけに置き、外部サービスへ送りません。</p></div>
+</div></section>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}仕組みと出典 — 制度データはJSON 1本、事務所が自分で維持できる | {{ site_name }}{% endblock %}
+{% block body %}
+<nav class="bc"><a href="{{ root if root else './' }}">困りごと</a> › 仕組みと出典</nav>
+<section class="hero small"><span class="badge">通報先ナビ（kecnavi）の制度版</span><h1>制度の「入口」を、事務所が<span class="ac">自分で維持できる</span>形に。</h1>
+<p class="lead">補助金・給付金の検索サイトは民間にも国にもあります。無いのは「相談を受けたその場で、この区の窓口と電話、期限、必要書類まで出て、案内した記録が残る」道具です。このサイトは制度データを JSON 1本にして、事務所の人が自分で足したり直したりできるようにしました。</p></section>
+
+<section class="steps"><h2>データの作り方</h2><div class="stepgrid">
+  <div class="step"><span class="num">1</span><h3>公式ページから事実だけ取る</h3><p>制度名・対象・内容・申請先の課と電話・期限・必要書類・公式ページの更新日。本文は転載しません（名古屋市サイトはCC表示の無い内容の二次利用に許諾が要るため）。</p></div>
+  <div class="step"><span class="num">2</span><h3>困りごとと属性のタグを付ける</h3><p>「ひとり親」「住民税非課税」「65歳以上」「持ち家」のような属性で絞れるように、制度ごとにタグを付けます。ここは人が判断します。</p></div>
+  <div class="step"><span class="num">3</span><h3>期限で並べ、区で窓口を差し替える</h3><p>期限が近い順に並び、期限を過ぎた制度は自動で「受付終了」になります。区役所が窓口の制度は、区を選ぶとその区の課・住所・電話に置き換わります。</p></div>
+</div></section>
+
+<section class="list"><h2>いまの収録（{{ region }} デモ版・{{ n }}件）</h2>
+  <div class="tscroll"><table class="tbl"><thead><tr><th>実施主体</th><th>件数</th></tr></thead><tbody>{% for k, v in levels.items() %}<tr><td>{{ k }}</td><td>{{ v }}</td></tr>{% endfor %}</tbody></table></div>
+  <p class="anote">出典: 名古屋市公式サイトの各制度ページ、愛知県・国（こども家庭庁・厚生労働省など）の公式ページ、区役所の所在地は名古屋市の施設カルテ（CC BY）。データ時点 {{ asof }}。</p>
+</section>
+
+<section class="compare"><h2>キットとして使う</h2><div class="cmpgrid">
+  <div class="cmp yes"><h3>中身</h3><p>制度データ（data/programs.json）・区データ（data/wards.json）・困りごと／属性の定義・検索UI／API・制度ページ（GovernmentService JSON-LD、sitemap、llms.txt）・相談記録（SQLite・CSV書き出し・トークン制）・systemd／公開プロキシの雛形。</p></div>
+  <div class="cmp yes"><h3>他の自治体へ</h3><p>data/ の2ファイルを差し替えるだけです。通報先ナビ（kecnavi）と同じ作りなので、両方を同じ事務所で運用できます。</p></div>
+</div>
+<p class="anote">相談窓口の道具として、<a href="https://exbridge.jp/ai-it-komon.html?ref=kseido" target="_blank" rel="noopener">AI-IT顧問契約</a>の時間の中で自治体版を組むこともできます。</p></section>
+{% endblock %}

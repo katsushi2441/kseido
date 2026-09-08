@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ s.name }}で使える制度（{{ region }}・区・県・国）{% if ward %}・{{ ward }}{% endif %} | {{ site_name }}{% endblock %}
+{% block description %}{{ s.name }}のときに使える名古屋市・区・愛知県・国の制度一覧。申請先の区役所の課・電話、期限、必要書類、出典リンクつき。{% endblock %}
+{% block head %}
+<script type="application/ld+json">{{ {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":site_name,"item":public_base},{"@type":"ListItem","position":2,"name":s.name,"item":public_base ~ "s/" ~ s.id}]} | tojson }}</script>
+<script type="application/ld+json">{{ {"@context":"https://schema.org","@type":"ItemList","name":s.name ~ "で使える制度","itemListElement":[]} | tojson }}</script>
+{% endblock %}
+{% block body %}
+<nav class="bc"><a href="{{ root if root else './' }}">困りごと</a> › {{ s.name }}</nav>
+<section class="hero small">
+  <span class="badge">{{ s.icon }} {{ s.name }}</span>
+  <h1>{{ s.name }}のときに使える制度 <span class="cnt">{{ items | length }}件</span></h1>
+  <p class="lead">{{ s.desc }}</p>
+</section>
+
+<form class="filter card" method="get" action="{{ root }}s/{{ s.id }}">
+  <div class="fgrid">
+    <div class="fcol">
+      <div class="flabel">お住まいの区（申請先を区役所に置き換えます）</div>
+      <select name="ward" class="sel"><option value="">区を選ぶ</option>{% for w in wards %}<option value="{{ w.slug }}" {% if ward==w.slug %}selected{% endif %}>{{ w.name }}</option>{% endfor %}</select>
+    </div>
+    <div class="fcol">
+      <div class="flabel">当てはまる属性で絞る（複数可）</div>
+      <div class="chips">
+        {% for t in tag_defs %}<label class="chip"><input type="checkbox" name="tag" value="{{ t.id }}" {% if t.id in tags %}checked{% endif %}><span>{{ t.name }}</span></label>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="factions"><button type="submit" class="btn btn-primary">この条件で絞る</button><a class="btn btn-link" href="{{ root }}s/{{ s.id }}">条件をクリア</a><label class="chk"><input type="checkbox" name="ended" value="1" {% if ended=='1' %}checked{% endif %}> 受付終了も表示</label></div>
+</form>
+
+{% if not items %}<div class="empty card"><p class="empty-t">この条件に合う制度はありません。</p><p>属性のチェックを外すか、別の困りごとを選んでください。</p></div>{% endif %}
+<div class="cards">
+{% for p in items %}
+  <article class="card pc">
+    <div class="pc-top"><span class="kind lv-{{ p.level }}">{{ p.level }}</span> <span class="due {{ p.state.type }}{% if p.state.days is not none and p.state.days <= 30 %} hot{% endif %}">{{ p.state.label }}{% if p.state.date %}・{{ p.state.date }}まで{% endif %}</span></div>
+    <h3><a href="{{ root }}p/{{ p.id }}{% if ward %}?ward={{ ward }}{% endif %}">{{ p.name }}</a></h3>
+    <p class="pbenefit">{{ p.benefit }}</p>
+    <div class="kv"><div class="k">誰が</div><div>{{ p.who }}</div></div>
+    <div class="kv"><div class="k">申請先</div><div>{{ p.apply_resolved.window }}{% if p.apply_resolved.tel %} ・ <a href="tel:{{ p.apply_resolved.tel }}">{{ p.apply_resolved.tel }}</a>{% endif %}{% if p.apply_resolved.how %} ・ {{ p.apply_resolved.how }}{% endif %}</div></div>
+    {% if p.documents %}<div class="kv"><div class="k">書類</div><div>{{ p.documents | join('、') }}</div></div>{% endif %}
+    <p class="src"><a href="{{ p.source_url }}" target="_blank" rel="noopener">出典: {{ p.source_name or '公式ページ' }}</a>{% if p.source_asof %}（{{ p.source_asof }}）{% endif %}</p>
+  </article>
+{% endfor %}
+</div>
+<p class="anote">並び順は「期限が近い順 → 年度内 → 随時」。要件・金額は必ず出典で確認してください。</p>
+{% endblock %}

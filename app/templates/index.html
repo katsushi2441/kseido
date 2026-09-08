@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}困りごとから使える制度を引く（{{ region }}・区・県・国） | {{ site_name }}{% endblock %}
+{% block head %}
+<script type="application/ld+json">{{ {"@context":"https://schema.org","@type":"WebSite","name":site_name,"url":public_base} | tojson }}</script>
+<script type="application/ld+json">{{ {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+ {"@type":"Question","name":"このサイトは何ができますか？","acceptedAnswer":{"@type":"Answer","text":"「出産・子育て」「ひとり親」「住まいの耐震・改修」「収入が減った」などの困りごとを選ぶと、名古屋市・区・愛知県・国の使える制度が並び、申請先（区役所の課・電話）、期限、必要書類、出典リンクが出ます。議員事務所や相談窓口が住民の相談を受けるときの入口です。"}},
+ {"@type":"Question","name":"情報はどこから来ていますか？","acceptedAnswer":{"@type":"Answer","text":"名古屋市公式サイトの各制度ページ、愛知県・国（こども家庭庁・厚生労働省など）の公式ページから、窓口・電話・期限・必要書類という事実だけを取り、各制度に出典リンクとデータ時点を付けています。公式ページの本文は転載していません。"}},
+ {"@type":"Question","name":"相談記録とは何ですか？","acceptedAnswer":{"@type":"Answer","text":"事務所が受けた相談（区・困りごと・案内した制度・次にやること）を残す簡単な台帳です。トークンを知る担当者だけが読み書きでき、CSVで書き出せます。個人情報は氏名ではなくイニシャル等で扱う運用を想定しています。"}}
+]} | tojson }}</script>
+{% endblock %}
+{% block body %}
+<section class="hero">
+  <span class="badge">{{ region }} デモ版 ・ 制度 {{ n }} 件 ・ データ時点 {{ asof }}</span>
+  <h1>困りごとから、<span class="ac">使える制度</span>と申請先を引く。</h1>
+  <p class="lead">出産・子育て、ひとり親、学費、医療費、住まいの耐震や改修、収入が減った、高齢の親の生活、物価高。困りごとを選ぶと、市・区・県・国の制度が「申請先・電話・期限・必要書類・出典」つきで並びます。議員事務所や相談窓口が、住民の相談を受けたその場で使う道具です。</p>
+</section>
+
+<section class="tiles">
+  <h2>困りごとを選ぶ</h2>
+  <div class="tilegrid">
+    {% for s in situations %}
+    <a class="tile" href="{{ root }}s/{{ s.id }}"><span class="tile-ic">{{ s.icon }}</span><span class="tile-n">{{ s.name }}</span><span class="tile-d">{{ s.desc }}</span><span class="tile-c">{{ counts[s.id] }} 制度</span></a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if soon %}
+<section class="soon">
+  <h2>期限が近い制度 <span class="cnt">90日以内</span></h2>
+  <div class="cards">
+    {% for p in soon %}
+    <article class="card pc">
+      <span class="kind">{{ p.level }}</span> <span class="due {{ 'hot' if p.state.days <= 30 else '' }}">{{ p.state.date }}まで（あと{{ p.state.days }}日）</span>
+      <h3><a href="{{ root }}p/{{ p.id }}">{{ p.name }}</a></h3>
+      <p class="pbenefit">{{ p.benefit }}</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="steps">
+  <h2>事務所での使い方</h2>
+  <div class="stepgrid">
+    <div class="step"><span class="num">1</span><h3>困りごとと区を選ぶ</h3><p>相談者の状況（例: ひとり親・中川区）を選ぶと、区役所の窓口と電話がその区のものに置き換わります。</p></div>
+    <div class="step"><span class="num">2</span><h3>制度ページを一緒に見る</h3><p>誰が対象か・何がもらえるか・期限・必要書類・出典。「出典」は公式ページなので、その場で電話して確かめられます。</p></div>
+    <div class="step"><span class="num">3</span><h3>相談記録に残す</h3><p>案内した制度と次にやること（書類の準備、期限の前に再連絡）を台帳に残し、CSVで書き出せます。</p></div>
+  </div>
+</section>
+
+<section class="compare">
+  <h2>区役所の窓口から探す</h2>
+  <div class="wardlist">{% for w in wards %}<a href="{{ root }}ku/{{ w.slug }}">{{ w.name }}</a>{% endfor %}</div>
+</section>
+{% endblock %}

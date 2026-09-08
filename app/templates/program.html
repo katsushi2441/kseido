@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ p.name }}｜対象・内容・申請先・期限・必要書類（{{ p.level }}） | {{ site_name }}{% endblock %}
+{% block description %}{{ p.name }}（{{ p.level }}）: {{ p.benefit[:60] }}。対象は{{ p.who[:50] }}。申請先・電話・期限・必要書類と出典リンク。{% endblock %}
+{% block head %}
+<script type="application/ld+json">{{ {"@context":"https://schema.org","@type":"GovernmentService","name":p.name,"serviceType":p.categories|join("・"),"provider":{"@type":"GovernmentOrganization","name":p.provider},"areaServed":region,"audience":{"@type":"Audience","audienceType":p.who[:80]},"availableChannel":{"@type":"ServiceChannel","serviceLocation":{"@type":"Place","name":p.apply_resolved.window},"servicePhone":({"@type":"ContactPoint","telephone":p.apply_resolved.tel} if p.apply_resolved.tel else None)},"url":public_base ~ "p/" ~ p.id,"isBasedOn":p.source_url} | tojson }}</script>
+<script type="application/ld+json">{{ {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":site_name,"item":public_base},{"@type":"ListItem","position":2,"name":(situations|selectattr('id','equalto',p.situations[0])|list|first).name if p.situations else '制度',"item":public_base ~ "s/" ~ (p.situations[0] if p.situations else '')},{"@type":"ListItem","position":3,"name":p.name,"item":public_base ~ "p/" ~ p.id}]} | tojson }}</script>
+{% endblock %}
+{% block body %}
+<nav class="bc"><a href="{{ root if root else './' }}">困りごと</a>{% for sid in p.situations %} › <a href="{{ root }}s/{{ sid }}">{{ (situations|selectattr('id','equalto',sid)|list|first).name }}</a>{% endfor %} › {{ p.name }}</nav>
+<section class="fhead card">
+  <div class="pc-top"><span class="kind lv-{{ p.level }}">{{ p.level }}</span> <span class="due {{ p.state.type }}{% if p.state.days is not none and p.state.days <= 30 %} hot{% endif %}">{{ p.state.label }}{% if p.state.date %}・{{ p.state.date }}まで{% if p.state.days is not none and p.state.days >= 0 %}（あと{{ p.state.days }}日）{% endif %}{% endif %}</span></div>
+  <h1>{{ p.name }}</h1>
+  <p class="lead">{{ p.benefit }}</p>
+  <div class="fgrid2">
+    <div><div class="k">誰が対象か</div><div>{{ p.who }}</div></div>
+    <div><div class="k">何がもらえる・受けられる</div><div>{{ p.amount or p.benefit }}</div></div>
+    <div><div class="k">期限</div><div>{{ p.state.label }}{% if p.state.date %} ・ {{ p.state.date }}{% endif %}{% if p.state.note %}<br><small>{{ p.state.note }}</small>{% endif %}</div></div>
+    <div><div class="k">申請先{% if p.apply_resolved.ward %}（{{ p.apply_resolved.ward }}）{% endif %}</div><div>{{ p.apply_resolved.window }}{% if p.apply_resolved.addr %}<br><small>{{ p.apply_resolved.addr }}</small>{% endif %}{% if p.apply_resolved.tel %}<br><a href="tel:{{ p.apply_resolved.tel }}">{{ p.apply_resolved.tel }}</a>{% endif %}{% if p.apply_resolved.how %}<br><small>{{ p.apply_resolved.how }}</small>{% endif %}{% if p.apply_resolved.url %}<br><a href="{{ p.apply_resolved.url }}" target="_blank" rel="noopener">申請ページ</a>{% endif %}</div></div>
+    <div><div class="k">必要書類</div><div>{% if p.documents %}<ul class="docs">{% for d in p.documents %}<li>{{ d }}</li>{% endfor %}</ul>{% else %}出典ページで確認{% endif %}</div></div>
+    <div><div class="k">実施主体</div><div>{{ p.provider }}</div></div>
+  </div>
+  {% if p.notes %}<p class="fnote">{{ p.notes }}</p>{% endif %}
+  {% if (p.apply or {}).ward_window and not ward %}
+  <form class="wardpick" method="get" action="{{ root }}p/{{ p.id }}"><label>区を選ぶと区役所の窓口に置き換えます: </label><select name="ward" class="sel" onchange="this.form.submit()"><option value="">区を選ぶ</option>{% for w in wards %}<option value="{{ w.slug }}">{{ w.name }}</option>{% endfor %}</select></form>
+  {% endif %}
+  <p class="src"><a href="{{ p.source_url }}" target="_blank" rel="noopener">出典: {{ p.source_name or '公式ページ' }}</a>{% if p.source_asof %}（公式ページの更新 {{ p.source_asof }}）{% endif %} ・ データ時点 {{ asof }}</p>
+</section>
+
+{% if related %}
+<section class="list">
+  <h2>あわせて見る制度</h2>
+  <div class="cards">
+    {% for r in related %}<article class="card pc"><span class="kind lv-{{ r.level }}">{{ r.level }}</span> <span class="due {{ r.state.type }}">{{ r.state.label }}</span><h3><a href="{{ root }}p/{{ r.id }}{% if ward %}?ward={{ ward }}{% endif %}">{{ r.name }}</a></h3><p class="pbenefit">{{ r.benefit }}</p></article>{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}
