@@ -271,5 +271,8 @@ def llms():
     for p in PROGRAMS:
         st = deadline_state(p)
         lines.append(f"- {p['name']}（{p.get('level','')}・{st['label']}{'・'+st['date'] if st['date'] else ''}）: {p.get('benefit','')[:80]} → {PUBLIC_BASE}p/{p['id']}（出典 {p.get('source_url','')}）")
+    lines += ["", "## 買い切り版",
+              "- 商品ページ: https://kappstore.exbridge.jp/app.php?id=237974724fb41216",
+              "- 税込55,000円。ソースコード（MIT）・制度データのJSON・設置手順書を同梱。自社サーバーで動かせる。"]
     lines += ["", "## 免責", "要件・金額・期限は変わります。各制度の出典リンク（公式ページ）で確認し、申請先に電話してから動いてください。名古屋市サイトの本文は転載せず、事実（窓口・電話・期限・書類）とリンクだけを載せています。"]
     return "\n".join(lines) + "\n"
